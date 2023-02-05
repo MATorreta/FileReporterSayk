@@ -29,7 +29,11 @@ namespace FileReporterSayk
             Console.WriteLine("Drive selected: " + selectedDrive);
             Utilities.GetFileInfo(selectedDrive.Name);                                                       //Call function in Utilities.GetFileInfo for selected drive.
             Utilities.GetSubFoldersInfo(selectedDrive.Name);
-            Console.WriteLine(Utilities.Extensions);    
+            Utilities.GetSizeFolders();
+            foreach (var items in Utilities.ForAddSizes) 
+            {
+                Console.WriteLine(items.Key + "\t\t\t\t\t\t" + Utilities.BytesToSize(items.Value.TotalSize));
+            }
         }
     }
 }

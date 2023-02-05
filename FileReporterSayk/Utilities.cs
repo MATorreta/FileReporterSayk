@@ -10,7 +10,8 @@ namespace FileReporterSayk
     {
 
         public static Dictionary<string, PathStats> Statistics = new Dictionary<string, PathStats>();
-        public static Dictionary<string, PathStats> Extensions = new Dictionary<string, PathStats>();   
+        public static Dictionary<string, PathStats> Extensions = new Dictionary<string, PathStats>();
+        public static Dictionary<string, PathStats> ForAddSizes = new Dictionary<string, PathStats>();
 
         public static void GetFileInfo(string path)
         {
@@ -27,7 +28,7 @@ namespace FileReporterSayk
                     currentPathItems++;
                     if (!Extensions.ContainsKey(file.Extension))
                     {
-                        Extensions.Add(file.Extension, new PathStats(file.Length,1));
+                        Extensions.Add(file.Extension, new PathStats(file.Length, 1));
                     }
                     else
                     {
@@ -43,15 +44,13 @@ namespace FileReporterSayk
             }
             PathStats currentPathStats = new PathStats(currentPathSize, currentPathItems);
             Statistics.Add(path, currentPathStats);
-            Console.WriteLine(path + "\t" + Utilities.BytesToSize(currentPathStats.TotalSize) +"\t" +currentPathStats.NumberItems + " Items ");
-            
+            Console.WriteLine(path + "\t" + Utilities.BytesToSize(currentPathStats.TotalSize) + "\t" + currentPathStats.NumberItems + " Items ");
+
         }
         public static void GetSubFoldersInfo(string path)
         {
             DirectoryInfo selectedDi = new DirectoryInfo(path);
             DirectoryInfo[] folders = selectedDi.GetDirectories();
-
-
             foreach (DirectoryInfo folder in folders)
             {
                 try
@@ -62,11 +61,8 @@ namespace FileReporterSayk
                 }
                 catch (Exception ex)
                 {
-
                     Console.WriteLine(ex.Message + "\t" + folders);
                 }
-
-
             }
         }
         public static string BytesToSize(long bytes)                  //Function for convert Bytes on GB, MB , KB. 
@@ -84,8 +80,33 @@ namespace FileReporterSayk
                 return (bytes / 1024).ToString() + " KB ";
             }
             else
-                return bytes + "Bytes";       
+                return bytes + "Bytes";
         }
 
-    }    
+        public static void GetSizeFolders()
+        {
+            foreach (var item in Utilities.Statistics)
+            {
+                Console.WriteLine("--------------");
+                string path = item.Key;
+                string[] fragments = path.Split(@"\");
+                string currentFragment = "";
+                foreach (string fragment in fragments)
+                {
+                    currentFragment = currentFragment + fragment + @"\";
+                    Console.WriteLine(currentFragment);
+                    if (Utilities.ForAddSizes.ContainsKey(currentFragment))
+                    {
+                        Utilities.ForAddSizes[currentFragment].TotalSize += item.Value.TotalSize;
+                        Utilities.ForAddSizes[currentFragment].NumberItems += item.Value.NumberItems;
+                    }
+                    else
+                    {
+                        Utilities.ForAddSizes.Add(currentFragment, item.Value);
+
+                    }
+                }
+            }
+        }
+    }
 }   
