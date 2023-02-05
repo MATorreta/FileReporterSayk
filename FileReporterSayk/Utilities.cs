@@ -10,19 +10,31 @@ namespace FileReporterSayk
     {
 
         public static Dictionary<string, PathStats> Statistics = new Dictionary<string, PathStats>();
+        public static Dictionary<string, PathStats> Extensions = new Dictionary<string, PathStats>();   
 
         public static void GetFileInfo(string path)
         {
             long currentPathSize = 0;
             int currentPathItems = 0;
 
+
             DirectoryInfo di = new DirectoryInfo(path);
             try
             {
-                foreach (FileInfo file in di.GetFiles()) 
+                foreach (FileInfo file in di.GetFiles())
                 {
                     currentPathSize += file.Length;
-                    currentPathItems++;    
+                    currentPathItems++;
+                    if (!Extensions.ContainsKey(file.Extension))
+                    {
+                        Extensions.Add(file.Extension, new PathStats(file.Length,1));
+                    }
+                    else
+                    {
+                        Extensions[file.Extension].TotalSize += file.Length;
+                        Extensions[file.Extension].NumberItems++;
+                    }
+
                 }
             }
             catch (Exception ex)
@@ -32,7 +44,7 @@ namespace FileReporterSayk
             PathStats currentPathStats = new PathStats(currentPathSize, currentPathItems);
             Statistics.Add(path, currentPathStats);
             Console.WriteLine(path + "\t" + Utilities.BytesToSize(currentPathStats.TotalSize) +"\t" +currentPathStats.NumberItems + " Items ");
-
+            
         }
         public static void GetSubFoldersInfo(string path)
         {
@@ -74,5 +86,6 @@ namespace FileReporterSayk
             else
                 return bytes + "Bytes";       
         }
+
     }    
 }   
