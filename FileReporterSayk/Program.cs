@@ -37,7 +37,6 @@ namespace FileReporterSayk
             }
             Utilities.selectedDrivetxt = selectedDrive.Name.Substring(0,selectedDrive.Name.Length -2);
             Utilities.Txt();
-
         }
     }
 }
