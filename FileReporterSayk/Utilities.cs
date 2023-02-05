@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace FileReporterSayk
 {
-    internal class Utilities
+    public static class Utilities
     {
-
+        public static string selectedDrivetxt;
         public static Dictionary<string, PathStats> Statistics = new Dictionary<string, PathStats>();
         public static Dictionary<string, PathStats> Extensions = new Dictionary<string, PathStats>();
         public static Dictionary<string, PathStats> ForAddSizes = new Dictionary<string, PathStats>();
@@ -82,7 +82,6 @@ namespace FileReporterSayk
             else
                 return bytes + "Bytes";
         }
-
         public static void GetSizeFolders()
         {
             foreach (var item in Utilities.Statistics)
@@ -108,5 +107,26 @@ namespace FileReporterSayk
                 }
             }
         }
+
+        public static void Txt()
+        {
+            string filePath = "FileReport"+selectedDrivetxt+".tsv";
+            WriteToFile(filePath);
+        }
+
+        static void WriteToFile(string filePath)
+        {
+            // Write to the file
+            using (StreamWriter sw = new StreamWriter(filePath))
+            {
+                sw.WriteLine("Path\tSize\tItems");
+                foreach (var items in Utilities.ForAddSizes)
+                {
+                    sw.WriteLine(items.Key + "\t" + Utilities.BytesToSize(items.Value.TotalSize)+"\t"+items.Value.NumberItems);
+                }
+            }
+        }
     }
-}   
+}
+
+

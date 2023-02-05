@@ -5,6 +5,7 @@ namespace FileReporterSayk
 {
     internal class Program
     {
+
         static void Main(string[] args)
         {
             Console.WriteLine("List of Drives");
@@ -34,6 +35,9 @@ namespace FileReporterSayk
             {
                 Console.WriteLine(items.Key + "\t\t\t\t\t\t" + Utilities.BytesToSize(items.Value.TotalSize));
             }
+            Utilities.selectedDrivetxt = selectedDrive.Name.Substring(0,selectedDrive.Name.Length -2);
+            Utilities.Txt();
+
         }
     }
 }
